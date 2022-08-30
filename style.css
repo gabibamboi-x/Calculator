@@ -8,36 +8,35 @@ body {
 }
 
 #mainDiv {
-    height: calc(100vh / 1.3);
-    width: calc(100vh / 1.9);
+    height: calc(100vh / 1.2);
+    width: calc(100vh / 1.2 / 1.5);
     border: 2px;
     border-color: black;
     border-style: solid;
     border-radius: 10px;
     display: flex;
     flex-direction: column;
+    background-color: seagreen;
 }
 
 #displayWindow {
     height: calc(100vh / 10);
-    border-style: solid;
-    padding: 10px;
     margin: 25px;
-    margin-top: 50px;
+    margin-top: 70px;
+    border-style: solid;
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    align-items: center;
+    justify-content: end;
     border-radius: 15px;
-}
-
-#resultArea {
-    text-align: end;
+    font-size: 50px;
+    padding-inline: 20px;
+    background-color: white;
 }
 
 .Buttons {
     display: flex;
     flex: 1;
-    padding-inline: 12.5px;
+    padding: 20px;
 }
 
 .column1,
@@ -46,18 +45,25 @@ body {
 .column4 {
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
     flex: 1;
-    margin: 12.5px;
+    gap: 10px;
 }
 
 .btn {
+    width: calc(100vh / 9);
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: larger;
     font-weight: 900;
     flex: 1;
-    margin-block: 10px;
+    flex-shrink: 1;
     border: none;
     border-radius: 10px;
+}
+
+.btn:hover {
+    opacity: 80%;
 }
