@@ -1,5 +1,5 @@
 const symbols = ['AC', '7', '4', '1', '0', '±', '8', '5',
-                '2', '.', '%', '9', '6', '3', 'DEL', '÷',
+                '2', '.', '%', '9', '6', '3', '␡', '÷',
                 '×', '-', '+', '='];
 
 const basicBtn = document.querySelector('.Buttons');
@@ -59,18 +59,54 @@ button.forEach(el => el.addEventListener('click', () => {
         currentNumber = currentNumber / 100;
         display();
     } else if (el.value === '=') {
+        // replacing the symbols with operators understood by JS
+        currentValue = currentValue.replace(/×/g, '*').replace(/÷/g, '/');
+        // check if the user pressed equal after a operator button, remove the operator if so
+        if (currentValue.charAt(currentValue.length - 1) === ' ') {
+            currentValue = currentValue.slice(0, -3);
+        }
+
+        const myArr = currentValue.split(' ');
+
+        function calculate() {
+            if (myArr.includes('*') || myArr.includes('/')) {
+                for (let i = 0; i < myArr.length; i++) {
+                    if (myArr[i] === '*' || myArr[i] === '/') {
+                        currentNumber = operate(myArr[i], myArr[i - 1], myArr[i + 1]);
+                        myArr.splice(i - 1, 3, currentNumber.toString());
+                        i = 0;
+                    }
+                }
+            } else {
+                for (let j = 0; j < myArr.length; j++) {
+                    if (myArr[j] === '-' || myArr[j] === '+') {
+                        currentNumber = operate(myArr[j], myArr[j - 1], myArr[j + 1]);
+                        myArr.splice(j - 1, 3, currentNumber.toString());
+                        j = 0;
+                    }
+                }
+            }
+        }
+        
+        while (myArr.length > 1) {
+            calculate();
+        }
+
+        currentNumber = myArr[0];
+        currentValue = myArr[0];
+        display()
         // TODO operate();
     } else if (el.value === '.') {
         // in order to avoid having 2 dots in our number we check first if there's already one
         // if not we go ahead and add one
         if (!currentNumber.includes('.')) {
-            currentValue += el.value
+            currentValue += el.value;
             currentNumber += el.value;
-            display()
+            display();
         }
-    } else if (el.value === 'DEL') {
+    } else if (el.value === '␡') {
         // everytime the DEL button is pressed the last char in our number is removed
-        currentNumber = currentNumber.slice(0, -1);
+        currentNumber = currentNumber.toString().slice(0, -1);
         currentValue  = currentValue.slice(0, -1);
         display();
     } else {
@@ -78,18 +114,16 @@ button.forEach(el => el.addEventListener('click', () => {
         currentValue += ' ' + el.value + ' ';
         // reset the display number to start over when typing after an operator
         currentNumber = '';
-        // replacing the symbols with operators understood by JS
-        currentValue = currentValue.replace('×', '*').replace('÷', '/');
     }
 }));
 
 
 function add(a, b) {
-    return a + b;
+    return Number(a) + Number(b);
 };
 
 function subtract(a, b) {
-    return a - b;
+    return Number(a) - Number(b);
 };
 
 function multiply(a, b) {
