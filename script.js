@@ -1,8 +1,15 @@
+// CALCULATOR
+// Created by gabibamboi-x as a project assignment for The Odin Project
+// TOD suggested to avoid using calc() and eval() and so this is what i 
+// came up with as a solution for my calculator.
+
+
 const symbols = ['AC', '7', '4', '1', '0', '±', '8', '5',
                 '2', '.', '%', '9', '6', '3', '⌫', '÷',
                 '×', '-', '+', '='];
 
 const basicBtn = document.querySelector('.Buttons');
+
 
 let s = 0;
 for (let i = 1; i < 5; i++) {
@@ -12,16 +19,21 @@ for (let i = 1; i < 5; i++) {
     basicBtn.appendChild(btnColumn);
 
     // create the actual buttons of our calculator,
-    // also adding their symbol (as value and textContent)
+    // also adding their symbol (as value, id and textContent)
     for (let j = 1; j < 6; j++) {
         let btn = document.createElement('button');
         btn.setAttribute('class', 'btn');
+        btn.setAttribute('id', symbols[s]);
         btn.value = symbols[s];
         btn.textContent = symbols[s];
         btnColumn.appendChild(btn);
         s++;
     }
 };
+
+
+
+
 
 // get the display element
 const displayValue = document.getElementById('displayWindow');
@@ -31,6 +43,8 @@ const button = document.querySelectorAll('.btn');
 let currentNumber = '';
 // create a variable that's needed to store the whole operation
 let currentValue = '';
+
+
 
 // Add an Event Listener for each button that does different things based on their value.
 button.forEach(el => el.addEventListener('click', () => { 
@@ -86,9 +100,8 @@ button.forEach(el => el.addEventListener('click', () => {
         };
 
         currentNumber = myArr[0];
-        console.log(currentValue)
+        currentValue = '';
         display();
-        // TODO operate();
     } else if (el.value === '.') {
         // in order to avoid having 2 dots in our number we check first if there's already one
         // if not we go ahead and add one
@@ -109,6 +122,45 @@ button.forEach(el => el.addEventListener('click', () => {
 }));
 
 
+
+
+
+// KEYBOARD SUPPORT
+window.addEventListener('keydown', (event) => {
+    // store the key that was pressed
+    const key = event.key;
+
+    // for the number a for loop with a switch statement inside will do
+    for (let i = 0; i < 10; i++) {
+        // we have 10 numbers 0-9
+        switch (key) {
+            // the i will increase each time changing the case and the id of the button
+            case i.toString() :
+                document.getElementById(i.toString()).click();
+                break; 
+        }
+    }
+
+    // two arrays with the items inside ordered as we need them are needed for another loop
+    // instead of writing more lines of code. For some reason i couldn't get the simple if 
+    // statement to work inside the loop, switch was my alternative
+    const symbolsArr = ['AC', '±', '%', '÷', '×', '-', '+', '=', '⌫', '.'];
+    const keyArr = ['Escape', '±', '%', '/', '*', '-', '+', 'Enter', 'Backspace', '.'];
+    for (let j = 0; j < 10; j++) {
+        switch (key) {
+            case keyArr[j] :
+                document.getElementById(symbolsArr[j]).click();
+                break; 
+        }
+    }
+
+});
+
+
+
+
+
+// FUNCTIONS
 function add(a, b) {
     return Number(a) + Number(b);
 };
@@ -140,8 +192,3 @@ function operate(operator, firstNumber, secondNumber) {
 function display() {
     displayValue.textContent = currentNumber;
 }
-
-function keySupport() {
-    window.addEventListener('keydown', (event) => {
-        return event.key;
-})};
