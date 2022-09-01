@@ -1,5 +1,5 @@
 const symbols = ['AC', '7', '4', '1', '0', '±', '8', '5',
-                '2', '.', '%', '9', '6', '3', '␡', '÷',
+                '2', '.', '%', '9', '6', '3', '⌫', '÷',
                 '×', '-', '+', '='];
 
 const basicBtn = document.querySelector('.Buttons');
@@ -33,11 +33,9 @@ let currentNumber = '';
 let currentValue = '';
 
 // Add an Event Listener for each button that does different things based on their value.
-button.forEach(el => el.addEventListener('click', () => {
+button.forEach(el => el.addEventListener('click', () => { 
     // if the value is not NaN it's a number which is displayed when clicked on it
     if (!isNaN(el.value)) {
-        // add the number to the main string 
-        currentValue += el.value;
         // add the number to the current number that is displayed 
         currentNumber += el.value;
         // print the number on screen
@@ -47,11 +45,10 @@ button.forEach(el => el.addEventListener('click', () => {
         currentValue = '';
         currentNumber = '';
         // show nothing / clear the calculator's display
-        display();
+        displayValue.textContent = '0';
     } else if (el.value === '±') {
         // to get the negative number we simply subtract the double of it
         // it also works from negative to positive ;)
-        currentValue -= currentValue * 2;
         currentNumber -= currentNumber * 2;
         display();
     } else if (el.value === '%') {
@@ -60,6 +57,7 @@ button.forEach(el => el.addEventListener('click', () => {
         display();
     } else if (el.value === '=') {
         // replacing the symbols with operators understood by JS
+        currentValue += currentNumber;
         currentValue = currentValue.replace(/×/g, '*').replace(/÷/g, '/');
         // check if the user pressed equal after a operator button, remove the operator if so
         if (currentValue.charAt(currentValue.length - 1) === ' ') {
@@ -75,43 +73,36 @@ button.forEach(el => el.addEventListener('click', () => {
                         currentNumber = operate(myArr[i], myArr[i - 1], myArr[i + 1]);
                         myArr.splice(i - 1, 3, currentNumber.toString());
                         i = 0;
-                    }
-                }
-            } else {
+            }}} else {
                 for (let j = 0; j < myArr.length; j++) {
                     if (myArr[j] === '-' || myArr[j] === '+') {
                         currentNumber = operate(myArr[j], myArr[j - 1], myArr[j + 1]);
                         myArr.splice(j - 1, 3, currentNumber.toString());
                         j = 0;
-                    }
-                }
-            }
-        }
+        }}}};
         
         while (myArr.length > 1) {
             calculate();
-        }
+        };
 
         currentNumber = myArr[0];
-        currentValue = myArr[0];
-        display()
+        console.log(currentValue)
+        display();
         // TODO operate();
     } else if (el.value === '.') {
         // in order to avoid having 2 dots in our number we check first if there's already one
         // if not we go ahead and add one
         if (!currentNumber.includes('.')) {
-            currentValue += el.value;
             currentNumber += el.value;
             display();
         }
-    } else if (el.value === '␡') {
+    } else if (el.value === '⌫') {
         // everytime the DEL button is pressed the last char in our number is removed
         currentNumber = currentNumber.toString().slice(0, -1);
-        currentValue  = currentValue.slice(0, -1);
         display();
     } else {
         // add the operators to the operating string
-        currentValue += ' ' + el.value + ' ';
+        currentValue += currentNumber + ' ' + el.value + ' ';
         // reset the display number to start over when typing after an operator
         currentNumber = '';
     }
@@ -149,3 +140,8 @@ function operate(operator, firstNumber, secondNumber) {
 function display() {
     displayValue.textContent = currentNumber;
 }
+
+function keySupport() {
+    window.addEventListener('keydown', (event) => {
+        return event.key;
+})};
