@@ -1,7 +1,10 @@
 // CALCULATOR
-// Created by gabibamboi-x as a project assignment for The Odin Project
+
 // TOD suggested to avoid using calc() and eval() and so this is what i 
 // came up with as a solution for my calculator.
+
+// Based on Apple's Calculator they are using ',' instead of a dot so i decided to do the same
+// and replaced all dots with a comma.
 
 
 const symbols = ['AC', '7', '4', '1', '0', '±', '8', '5',
@@ -31,7 +34,9 @@ for (let i = 1; i < 5; i++) {
     }
 };
 
-
+// replace the . with , on our button
+const comma = document.getElementById('.');
+comma.textContent = ',';
 
 
 
@@ -43,7 +48,8 @@ const button = document.querySelectorAll('.btn');
 let currentNumber = '';
 // create a variable that's needed to store the whole operation
 let currentValue = '';
-
+// create a variable that's needed to store the ongoing calculation
+let showOperation = '';
 
 
 // Add an Event Listener for each button that does different things based on their value.
@@ -54,26 +60,32 @@ button.forEach(el => el.addEventListener('click', () => {
         currentNumber += el.value;
         // print the number on screen
         display();
+
     } else if (el.value === 'AC') {
         // reset everything when AC is pressed
         currentValue = '';
         currentNumber = '';
         // show nothing / clear the calculator's display
         displayValue.textContent = '0';
+        document.getElementById('currentCalculation').textContent = '';
+
     } else if (el.value === '±') {
-        // to get the negative number we simply subtract the double of it
+        // get the negative number by subtracting the double of it
         // it also works from negative to positive ;)
         currentNumber -= currentNumber * 2;
         display();
+
     } else if (el.value === '%') {
-        // for the percentage we simply show that number divided by 100
+        // divide the number by 100 to get the percentage
         currentNumber = currentNumber / 100;
         display();
+
     } else if (el.value === '=') {
-        // replacing the symbols with operators understood by JS
+        if (!currentValue) { return };
+        // replace the operators with the ones understood by JS
         currentValue += currentNumber;
         currentValue = currentValue.replace(/×/g, '*').replace(/÷/g, '/');
-        // check if the user pressed equal after a operator button, remove the operator if so
+        // remove the operator if it's the last character of the current operation (currentValue)
         if (currentValue.charAt(currentValue.length - 1) === ' ') {
             currentValue = currentValue.slice(0, -3);
         }
@@ -81,6 +93,9 @@ button.forEach(el => el.addEventListener('click', () => {
         const myArr = currentValue.split(' ');
 
         function calculate() {
+        // after storing the operation in an array a loop will solve the multiplication and
+        // division first. The function then stops and it's called again from a while loop
+        // to solve the addition and subtraction until the array is left with only one number.
             if (myArr.includes('*') || myArr.includes('/')) {
                 for (let i = 0; i < myArr.length; i++) {
                     if (myArr[i] === '*' || myArr[i] === '/') {
@@ -93,33 +108,50 @@ button.forEach(el => el.addEventListener('click', () => {
                         currentNumber = operate(myArr[j], myArr[j - 1], myArr[j + 1]);
                         myArr.splice(j - 1, 3, currentNumber.toString());
                         j = 0;
-        }}}};
-        
-        while (myArr.length > 1) {
-            calculate();
+            }}}
         };
+        
+        while (myArr.length > 1) { calculate() };
 
+        // set the current number to the only one left in the array
         currentNumber = myArr[0];
+        
+        // show the user his whole calculations
+        document.getElementById('currentCalculation').textContent = displayActiveOperation() + '=';
         currentValue = '';
         display();
+
     } else if (el.value === '.') {
-        // in order to avoid having 2 dots in our number we check first if there's already one
-        // if not we go ahead and add one
+        // in order to avoid having 2 dots it's checked first if there's already one if not, one is added
         if (!currentNumber.includes('.')) {
             currentNumber += el.value;
-            display();
+            displayValue.textContent += ',';
+
+    }} else if (el.value === '⌫') {
+        // each time the DEL button is pressed the last char is removed
+        if (currentNumber.slice(-2, -1) === '.') { 
+            displayValue.textContent = currentNumber.toString().slice(0, -2) + ',';
+            currentNumber = currentNumber.toString().slice(0, -1);
+        } else if (!currentNumber) { return 
+        } else {
+            currentNumber = currentNumber.toString().slice(0, -1);
+            display()
         }
-    } else if (el.value === '⌫') {
-        // everytime the DEL button is pressed the last char in our number is removed
-        currentNumber = currentNumber.toString().slice(0, -1);
-        display();
-    } else {
-        // add the operators to the operating string
-        currentValue += currentNumber + ' ' + el.value + ' ';
-        // reset the display number to start over when typing after an operator
-        currentNumber = '';
-    }
-}));
+    } else /* operators */ {
+        // check for a number before actually accepting the operator
+        if (currentNumber) {
+            // add the operators to the operating string
+            currentValue += currentNumber + ' ' + el.value + ' ';
+            // reset the display number to start over when typing after the operator
+            document.getElementById('currentCalculation').textContent = displayActiveOperation();
+            currentNumber = '';
+        } else if (!currentNumber && isNaN(currentValue[-2])) {
+            // check for the last character in currentValue, no number means the user may have
+            // changed his mind and wants to use another operator and so the current operator 
+            // will be swapped for the newly pressed one.
+            currentValue = currentValue.slice(0, -2) + el.value + ' ';
+            document.getElementById('currentCalculation').textContent = displayActiveOperation();
+}}}));
 
 
 
@@ -130,9 +162,8 @@ window.addEventListener('keydown', (event) => {
     // store the key that was pressed
     const key = event.key;
 
-    // for the number a for loop with a switch statement inside will do
+    // check for keyboard pressed numbers and press the corresponding button on the calculator
     for (let i = 0; i < 10; i++) {
-        // we have 10 numbers 0-9
         switch (key) {
             // the i will increase each time changing the case and the id of the button
             case i.toString() :
@@ -161,34 +192,47 @@ window.addEventListener('keydown', (event) => {
 
 
 // FUNCTIONS
-function add(a, b) {
-    return Number(a) + Number(b);
-};
-
-function subtract(a, b) {
-    return Number(a) - Number(b);
-};
-
-function multiply(a, b) {
-    return a * b;
-};
-
-function divide(a, b) {
-    return a / b;
-};
+function add(a, b) { return Number(a) + Number(b) }
+function subtract(a, b) { return Number(a) - Number(b) }
+function multiply(a, b) { return a * b }
+function divide(a, b) { return a / b }
 
 function operate(operator, firstNumber, secondNumber) {
-    if (operator === '+') {
-        return add(firstNumber, secondNumber);
-    } else if (operator === '-') {
-        return subtract(firstNumber, secondNumber);
-    } else if (operator === '*') {
-        return multiply(firstNumber, secondNumber);
-    }
-    
-    return divide(firstNumber, secondNumber);
-}
+    switch (operator) {
+        case '+' : 
+            return add(firstNumber, secondNumber);
+        case '-' :
+            return subtract(firstNumber, secondNumber);
+        case '*' :
+            return multiply(firstNumber, secondNumber);
+        default :
+            return divide(firstNumber, secondNumber);
+}}
 
 function display() {
-    displayValue.textContent = currentNumber;
+    let displayTxt = currentNumber;
+    // clear the screen before displaying a new number
+    displayValue.textContent = '';
+    displayValue.textContent = Number(displayTxt).toLocaleString('de-DE');
+}
+
+function displayActiveOperation() {
+    // save the currentValue as a string and replace the JS understood operators 
+    // with the ones the user sees on the calculator
+    let fullOperationTxt = currentValue.replace(/\*/g, '×')
+                                       .replace(/\//g, '÷')
+                                       .replace(/\./g, ',');
+    
+    // create an array to loop through it and format the numbers
+    const formatArr = fullOperationTxt.split(' ');
+    fullOperationTxt = '';
+    
+    formatArr.forEach(el => {
+        if (!isNaN(el) && el !== '') {
+            fullOperationTxt += Number(el).toLocaleString('de-DE') + ' ';
+        } else {fullOperationTxt += el + ' '};
+    })
+    
+    // return the string with the formatted numbers
+    return fullOperationTxt;
 }
