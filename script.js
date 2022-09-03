@@ -7,7 +7,7 @@
 // and replaced all dots with a comma.
 
 
-const symbols = ['AC', '7', '4', '1', '0', '±', '8', '5',
+const symbols = ['C', '7', '4', '1', '0', '±', '8', '5',
                 '2', '.', '%', '9', '6', '3', '⌫', '÷',
                 '×', '-', '+', '='];
 
@@ -56,18 +56,20 @@ let showOperation = '';
 button.forEach(el => el.addEventListener('click', () => { 
     // if the value is not NaN it's a number which is displayed when clicked on it
     if (!isNaN(el.value)) {
-        // add the number to the current number that is displayed 
-        currentNumber += el.value;
-        // print the number on screen
-        display();
-
-    } else if (el.value === 'AC') {
+        if (Number(currentNumber) < 999999999 && Number(currentNumber) > -999999999) {
+            // add the number to the current number that is displayed 
+            currentNumber += el.value;
+            // print the number on screen
+            display();
+        } else { return }
+    } else if (el.value === 'C') {
         // reset everything when AC is pressed
         currentValue = '';
         currentNumber = '';
         // show nothing / clear the calculator's display
         displayValue.textContent = '0';
         document.getElementById('currentCalculation').textContent = '';
+        document.getElementById('hex').textContent = '';
 
     } else if (el.value === '±') {
         // get the negative number by subtracting the double of it
@@ -81,7 +83,6 @@ button.forEach(el => el.addEventListener('click', () => {
         display();
 
     } else if (el.value === '=') {
-        if (!currentValue) { return };
         // replace the operators with the ones understood by JS
         currentValue += currentNumber;
         currentValue = currentValue.replace(/×/g, '*').replace(/÷/g, '/');
@@ -91,6 +92,7 @@ button.forEach(el => el.addEventListener('click', () => {
         }
 
         const myArr = currentValue.split(' ');
+
 
         function calculate() {
         // after storing the operation in an array a loop will solve the multiplication and
@@ -115,7 +117,14 @@ button.forEach(el => el.addEventListener('click', () => {
 
         // set the current number to the only one left in the array
         currentNumber = myArr[0];
-        
+
+        if (isNaN(currentNumber) || currentValue.length < 5 || currentNumber > 99999999999999) {             
+            displayValue.textContent = 'ERROR';
+            document.getElementById('currentCalculation').textContent = '';
+            currentNumber = '';
+            currentValue = '';
+            return
+        }
         // show the user his whole calculations
         document.getElementById('currentCalculation').textContent = displayActiveOperation() + '=';
         currentValue = '';
@@ -123,7 +132,7 @@ button.forEach(el => el.addEventListener('click', () => {
 
     } else if (el.value === '.') {
         // in order to avoid having 2 dots it's checked first if there's already one if not, one is added
-        if (!currentNumber.includes('.')) {
+        if (!currentNumber.includes('.') && currentNumber.length > 0) {
             currentNumber += el.value;
             displayValue.textContent += ',';
 
@@ -138,6 +147,7 @@ button.forEach(el => el.addEventListener('click', () => {
             display()
         }
     } else /* operators */ {
+        console.log(currentNumber.length)
         // check for a number before actually accepting the operator
         if (currentNumber) {
             // add the operators to the operating string
@@ -151,7 +161,8 @@ button.forEach(el => el.addEventListener('click', () => {
             // will be swapped for the newly pressed one.
             currentValue = currentValue.slice(0, -2) + el.value + ' ';
             document.getElementById('currentCalculation').textContent = displayActiveOperation();
-}}}));
+        }
+}}));
 
 
 
@@ -175,8 +186,8 @@ window.addEventListener('keydown', (event) => {
     // two arrays with the items inside ordered as we need them are needed for another loop
     // instead of writing more lines of code. For some reason i couldn't get the simple if 
     // statement to work inside the loop, switch was my alternative
-    const symbolsArr = ['AC', '±', '%', '÷', '×', '-', '+', '=', '⌫', '.'];
-    const keyArr = ['Escape', '±', '%', '/', '*', '-', '+', 'Enter', 'Backspace', '.'];
+    const symbolsArr = ['C', '±', '%', '÷', '×', '-', '+', '=', '⌫', '.'];
+    const keyArr = ['Escape', '±', '%', '/', '*', '-', '+', '=', 'Backspace', '.'];
     for (let j = 0; j < 10; j++) {
         switch (key) {
             case keyArr[j] :
@@ -210,10 +221,16 @@ function operate(operator, firstNumber, secondNumber) {
 }}
 
 function display() {
+    document.getElementById('hex').textContent = ' ';
     let displayTxt = currentNumber;
     // clear the screen before displaying a new number
     displayValue.textContent = '';
-    displayValue.textContent = Number(displayTxt).toLocaleString('de-DE');
+    if (Number(displayTxt) < 1000000000 && Number(displayTxt) > -1000000000) {
+        displayValue.textContent = Number(displayTxt).toLocaleString('de-DE', {maximumFractionDigits: 3});
+    } else {
+        displayValue.textContent = Number(displayTxt).toString(16);
+        document.getElementById('hex').textContent = "Converted to hex due to it's length"
+    }
 }
 
 function displayActiveOperation() {
