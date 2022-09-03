@@ -11,7 +11,7 @@ This project is a simple calculator made after TOP's last project specs from the
 
 ## Demo
 
-Live preview [here 👉](https://gabibamboi-x.github.io/Calculator/)
+Live preview [👉 here](https://gabibamboi-x.github.io/Calculator/)
 
 
 ## Lessons Learned
