@@ -47,16 +47,14 @@ h1 {
     flex-direction: column;
     border-radius: 15px;
     padding-inline: 20px;
-    background-color: white;
-    background-image: url(./Images/disWal.jpg);
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
+    background-color: dimgray;
     color: whitesmoke;
 }
 
 #displayWindow {
     display: flex;
     justify-content: flex-end;
+    font-weight: 700;
     font-size: 70px;
 }
 
@@ -97,7 +95,8 @@ h1 {
     padding: 0%;
     border: none;
     border-radius: 15%;
-    box-shadow: 0 8px rgb(144, 139, 139);
+    background-color: whitesmoke;
+    box-shadow: 0 8px rgb(105, 100, 100);
 }
 
 .btn:hover {
@@ -106,7 +105,7 @@ h1 {
 
 .btn:active {
     background-color: rgb(9, 194, 9);
-    box-shadow: 0 5px rgb(144, 139, 139);
+    box-shadow: 0 5px rgb(142, 136, 136);
     transform: translateY(4px);
 }
 
