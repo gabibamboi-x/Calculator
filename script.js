@@ -3,8 +3,7 @@
 // TOD suggested to avoid using calc() and eval() and so this is what i 
 // came up with as a solution for my calculator.
 
-// Based on Apple's Calculator they are using ',' instead of a dot so i decided to do the same
-// and replaced all dots with a comma.
+// Based on my location we use use , in stead of . 
 
 
 const symbols = ['C', '7', '4', '1', '0', '±', '8', '5',
@@ -54,24 +53,31 @@ let showOperation = '';
 
 // Add an Event Listener for each button that does different things based on their value.
 button.forEach(el => el.addEventListener('click', () => { 
+
     // if the value is not NaN it's a number which is displayed when clicked on it
     if (!isNaN(el.value)) {
+        // ignore input if the length of our number is longer than 17
         if (currentNumber.length > 17) { return };
+        // reset font size and background if needed
         if (currentNumber.length < 12) { displayValue.style.fontSize = '40px' };
         document.getElementById('mainDiv').style.background = '';
+
         // add the number to the current number that is displayed 
         currentNumber += el.value;
         // print the number on screen
         display();
+
+
     } else if (el.value === 'C') {
+        // reset everything when C is pressed
         document.getElementById('mainDisplay').style.backgroundImage = '';
         displayValue.style.fontSize = '40px'
-        // reset everything when AC is pressed
         currentValue = '';
         currentNumber = '';
         // show nothing / clear the calculator's display
         displayValue.textContent = '0';
         document.getElementById('currentCalculation').textContent = '';
+
 
     } else if (el.value === '±') {
         // get the negative number by subtracting the double of it
@@ -79,10 +85,12 @@ button.forEach(el => el.addEventListener('click', () => {
         currentNumber -= currentNumber * 2;
         display();
 
+
     } else if (el.value === '%') {
         // divide the number by 100 to get the percentage
         currentNumber = currentNumber / 100;
         display();
+
 
     } else if (el.value === '=') {
         // replace the operators with the ones understood by JS
@@ -95,6 +103,7 @@ button.forEach(el => el.addEventListener('click', () => {
 
         const myArr = currentValue.split(' ');
 
+        // handle the division by zero with a meme ;)
         console.log(myArr.at(-1), myArr.at(-2))
         if (myArr.at(-1) === '0' && myArr.at(-2) === '/') {
             const lol = document.getElementById('mainDisplay')
@@ -128,6 +137,8 @@ button.forEach(el => el.addEventListener('click', () => {
         currentNumber = Number(myArr[0]).toFixed(3);
         if (currentNumber.length < 12) { displayValue.style.fontSize = '40px' };
 
+        // show error when the number is either too long or an operation can not be solved 
+        // wuth the given given numbers/operators 
         if (isNaN(currentNumber) || currentValue.length < 5 || currentNumber.length > 17) {             
             displayValue.textContent = 'ERROR';
             document.getElementById('currentCalculation').textContent = '';
@@ -141,11 +152,13 @@ button.forEach(el => el.addEventListener('click', () => {
         currentValue = '';
         display();
 
+
     } else if (el.value === '.') {
         // in order to avoid having 2 dots it's checked first if there's already one if not, one is added
         if (!currentNumber.includes('.') && currentNumber.length > 0) {
             currentNumber += el.value;
             displayValue.textContent += ',';
+
 
     }} else if (el.value === '⌫') {
         // each time the DEL button is pressed the last char is removed
@@ -157,6 +170,8 @@ button.forEach(el => el.addEventListener('click', () => {
             currentNumber = currentNumber.toString().slice(0, -1);
             display()
         }
+
+
     } else /* operators */ {
         // check for a number before actually accepting the operator
         if (currentNumber) {
@@ -218,6 +233,7 @@ function subtract(a, b) { return Number(a) - Number(b) }
 function multiply(a, b) { return a * b }
 function divide(a, b) { return a / b }
 
+
 function operate(operator, firstNumber, secondNumber) {
     switch (operator) {
         case '+' : 
@@ -230,10 +246,12 @@ function operate(operator, firstNumber, secondNumber) {
             return divide(firstNumber, secondNumber);
 }}
 
+
 function display() {
     let displayTxt = currentNumber;
     // clear the screen before displaying a new number
     displayValue.textContent = '';
+    // make sure the number doesn't get outside the display of the calculator
     if (displayTxt < 999999999999) {
         displayValue.textContent = Number(displayTxt).toLocaleString('de-DE', {maximumFractionDigits: 3});
     } else { 
@@ -241,6 +259,7 @@ function display() {
         displayValue.textContent = Number(displayTxt).toLocaleString('de-DE', {maximumFractionDigits: 3});
     }
 }
+
 
 function displayActiveOperation() {
     // save the currentValue as a string and replace the JS understood operators 
