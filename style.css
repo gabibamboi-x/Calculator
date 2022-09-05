@@ -59,18 +59,19 @@ body {
     display: flex;
     justify-content: space-evenly;
     flex: 1;
-    padding-block: 35px;
-    padding-top: 15px;
+    padding-top: 25px;
+    padding-bottom: 55px;
 }
 
 .column1,
 .column2,
 .column3,
 .column4 {
+    height: 100%;
     display: flex;
     flex-direction: column;
-    padding-top: 30px;
-    gap: calc(100vh/ 30);
+    padding-top: 20px;
+    gap: calc(100vh/ 40);
 }
 
 .btn {
@@ -78,11 +79,11 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 28px;
+    font-size: 38px;
     font-weight: 900;
     flex: 1;
     border: none;
-    border-radius: 15%;
+    border-radius: 10%;
     background-color: whitesmoke;
     box-shadow: 0 8px rgb(105, 100, 100);
 }

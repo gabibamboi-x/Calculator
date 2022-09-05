@@ -56,20 +56,22 @@ let showOperation = '';
 button.forEach(el => el.addEventListener('click', () => { 
     // if the value is not NaN it's a number which is displayed when clicked on it
     if (!isNaN(el.value)) {
-        if (Number(currentNumber) < 999999999999 && Number(currentNumber) > -999999999999) {
-            // add the number to the current number that is displayed 
-            currentNumber += el.value;
-            // print the number on screen
-            display();
-        } else { return }
+        if (currentNumber.length > 17) { return };
+        if (currentNumber.length < 12) { displayValue.style.fontSize = '40px' };
+        document.getElementById('mainDiv').style.background = '';
+        // add the number to the current number that is displayed 
+        currentNumber += el.value;
+        // print the number on screen
+        display();
     } else if (el.value === 'C') {
+        document.getElementById('mainDisplay').style.backgroundImage = '';
+        displayValue.style.fontSize = '40px'
         // reset everything when AC is pressed
         currentValue = '';
         currentNumber = '';
         // show nothing / clear the calculator's display
         displayValue.textContent = '0';
         document.getElementById('currentCalculation').textContent = '';
-        document.getElementById('hex').textContent = '';
 
     } else if (el.value === '±') {
         // get the negative number by subtracting the double of it
@@ -93,6 +95,13 @@ button.forEach(el => el.addEventListener('click', () => {
 
         const myArr = currentValue.split(' ');
 
+        console.log(myArr.at(-1), myArr.at(-2))
+        if (myArr.at(-1) === '0' && myArr.at(-2) === '/') {
+            const lol = document.getElementById('mainDisplay')
+            lol.style.backgroundImage = 'url(./Images/lol.gif)';
+            lol.style.backgroundSize = '100% 100%';
+            lol.style.backgroundRepeat = 'no-repeat'
+        }
 
         function calculate() {
         // after storing the operation in an array a loop will solve the multiplication and
@@ -116,15 +125,17 @@ button.forEach(el => el.addEventListener('click', () => {
         while (myArr.length > 1) { calculate() };
 
         // set the current number to the only one left in the array
-        currentNumber = myArr[0];
+        currentNumber = Number(myArr[0]).toFixed(3);
+        if (currentNumber.length < 12) { displayValue.style.fontSize = '40px' };
 
-        if (isNaN(currentNumber) || currentValue.length < 5 || currentNumber > 999999999999) {             
+        if (isNaN(currentNumber) || currentValue.length < 5 || currentNumber.length > 17) {             
             displayValue.textContent = 'ERROR';
             document.getElementById('currentCalculation').textContent = '';
             currentNumber = '';
             currentValue = '';
             return
         }
+
         // show the user his whole calculations
         document.getElementById('currentCalculation').textContent = displayActiveOperation() + '=';
         currentValue = '';
@@ -147,7 +158,6 @@ button.forEach(el => el.addEventListener('click', () => {
             display()
         }
     } else /* operators */ {
-        console.log(currentNumber.length)
         // check for a number before actually accepting the operator
         if (currentNumber) {
             // add the operators to the operating string
@@ -221,15 +231,14 @@ function operate(operator, firstNumber, secondNumber) {
 }}
 
 function display() {
-    document.getElementById('hex').textContent = ' ';
     let displayTxt = currentNumber;
     // clear the screen before displaying a new number
     displayValue.textContent = '';
-    if (displayTxt.length < 10) {
+    if (displayTxt < 999999999999) {
         displayValue.textContent = Number(displayTxt).toLocaleString('de-DE', {maximumFractionDigits: 3});
-    } else {
-        displayValue.textContent = Number(displayTxt).toString(16);
-        document.getElementById('hex').textContent = "Converted to hex due to it's length"
+    } else { 
+        displayValue.style.fontSize = '25px';
+        displayValue.textContent = Number(displayTxt).toLocaleString('de-DE', {maximumFractionDigits: 3});
     }
 }
 
@@ -244,11 +253,9 @@ function displayActiveOperation() {
     const formatArr = fullOperationTxt.split(' ');
     fullOperationTxt = '';
     
-    formatArr.forEach(el => {
-        if (!isNaN(el) && el !== '' && el.length > 9) {
-            fullOperationTxt += Number(el).toString(16) + ' ';            
-        } else if (!isNaN(el) && el !== '') {
-            fullOperationTxt += Number(el).toLocaleString('de-DE') + ' ';
+    formatArr.forEach(el => {           
+        if (!isNaN(el) && el !== '') {
+            fullOperationTxt += Number(el).toLocaleString('de-DE', {maximumFractionDigits: 3}) + ' ';
         } else {fullOperationTxt += el + ' '};
     })
     
