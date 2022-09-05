@@ -29,7 +29,7 @@ body {
 
 #mainDisplay {
     height: 150px;
-    width: 320px;
+    width: 370px;
     border-style: solid;
     display: flex;
     justify-content: space-between;
@@ -45,13 +45,13 @@ body {
     display: flex;
     justify-content: flex-end;
     font-weight: 700;
-    font-size: 49px;
+    font-size: 40px;
 }
 
 #currentCalculation {
     padding-top: 10px;
     display: flex;
-    font-size: 25px;
+    font-size: 20px;
     justify-content: flex-start;
 }
 
@@ -60,7 +60,7 @@ body {
     justify-content: space-evenly;
     flex: 1;
     padding-block: 35px;
-    padding-top: 14px;
+    padding-top: 15px;
 }
 
 .column1,
@@ -70,16 +70,16 @@ body {
     display: flex;
     flex-direction: column;
     padding-top: 30px;
-    gap: calc(100vh/ 40);
+    gap: calc(100vh/ 30);
 }
 
 .btn {
-    width: 60px;
+    width: 68px;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 30px;
-    font-weight: 800;
+    font-size: 28px;
+    font-weight: 900;
     flex: 1;
     border: none;
     border-radius: 15%;
