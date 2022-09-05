@@ -138,7 +138,7 @@ button.forEach(el => el.addEventListener('click', () => {
         if (currentNumber.length < 12) { displayValue.style.fontSize = '40px' };
 
         // show error when the number is either too long or an operation can not be solved 
-        // wuth the given given numbers/operators 
+        // with the given given numbers/operators 
         if (isNaN(currentNumber) || currentValue.length < 5 || currentNumber.length > 17) {             
             displayValue.textContent = 'ERROR';
             document.getElementById('currentCalculation').textContent = '';
