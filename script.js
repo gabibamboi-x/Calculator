@@ -1,6 +1,6 @@
 // CALCULATOR
 
-// TOD suggested to avoid using calc() and eval() and so this is what i 
+// TOP suggested to avoid using calc() and eval() and so this is what i 
 // came up with as a solution for my calculator.
 
 // Based on my location we use use , in stead of . 
