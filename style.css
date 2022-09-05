@@ -9,13 +9,14 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     overflow: hidden;
     font-size: 25px;
     font-family: 'Courier New', Courier, monospace;
 }
 
 #mainDiv {
-    margin-top: 30px;
+    margin-top: auto;
     border: 4px;
     border-color: whitesmoke;
     border-style: solid;
