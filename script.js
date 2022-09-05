@@ -118,7 +118,7 @@ button.forEach(el => el.addEventListener('click', () => {
         // set the current number to the only one left in the array
         currentNumber = myArr[0];
 
-        if (isNaN(currentNumber) || currentValue.length < 5) {             
+        if (isNaN(currentNumber) || currentValue.length < 5 || currentNumber > 999999999999) {             
             displayValue.textContent = 'ERROR';
             document.getElementById('currentCalculation').textContent = '';
             currentNumber = '';
