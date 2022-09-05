@@ -56,7 +56,7 @@ let showOperation = '';
 button.forEach(el => el.addEventListener('click', () => { 
     // if the value is not NaN it's a number which is displayed when clicked on it
     if (!isNaN(el.value)) {
-        if (Number(currentNumber) < 999999999 && Number(currentNumber) > -999999999) {
+        if (Number(currentNumber) < 999999999999 && Number(currentNumber) > -999999999999) {
             // add the number to the current number that is displayed 
             currentNumber += el.value;
             // print the number on screen
@@ -118,7 +118,7 @@ button.forEach(el => el.addEventListener('click', () => {
         // set the current number to the only one left in the array
         currentNumber = myArr[0];
 
-        if (isNaN(currentNumber) || currentValue.length < 5 || currentNumber > 99999999999999) {             
+        if (isNaN(currentNumber) || currentValue.length < 5) {             
             displayValue.textContent = 'ERROR';
             document.getElementById('currentCalculation').textContent = '';
             currentNumber = '';
@@ -225,7 +225,7 @@ function display() {
     let displayTxt = currentNumber;
     // clear the screen before displaying a new number
     displayValue.textContent = '';
-    if (Number(displayTxt) < 1000000000 && Number(displayTxt) > -1000000000) {
+    if (displayTxt.length < 10) {
         displayValue.textContent = Number(displayTxt).toLocaleString('de-DE', {maximumFractionDigits: 3});
     } else {
         displayValue.textContent = Number(displayTxt).toString(16);
@@ -245,7 +245,9 @@ function displayActiveOperation() {
     fullOperationTxt = '';
     
     formatArr.forEach(el => {
-        if (!isNaN(el) && el !== '') {
+        if (!isNaN(el) && el !== '' && el.length > 9) {
+            fullOperationTxt += Number(el).toString(16) + ' ';            
+        } else if (!isNaN(el) && el !== '') {
             fullOperationTxt += Number(el).toLocaleString('de-DE') + ' ';
         } else {fullOperationTxt += el + ' '};
     })
