@@ -16,6 +16,7 @@ body {
 }
 
 #mainDiv {
+    padding-top: 20px;
     border: 4px;
     border-color: whitesmoke;
     border-style: solid;
